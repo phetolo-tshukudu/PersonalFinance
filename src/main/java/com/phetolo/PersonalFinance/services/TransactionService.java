@@ -8,16 +8,13 @@ import java.util.List;
 
 import javax.security.auth.login.AccountNotFoundException;
 
-import org.springframework.data.jpa.repository.Modifying;
+
 import org.springframework.stereotype.Service;
 
-import com.phetolo.PersonalFinance.dto.AccountDTO;
 import com.phetolo.PersonalFinance.dto.TransactionDTO;
-import com.phetolo.PersonalFinance.enums.Category;
 import com.phetolo.PersonalFinance.enums.TransactionType;
 import com.phetolo.PersonalFinance.exception.BudgetExceededException;
 import com.phetolo.PersonalFinance.exception.UserNotFoundException;
-import com.phetolo.PersonalFinance.mapper.AccountMapper;
 import com.phetolo.PersonalFinance.mapper.TransactionMapper;
 import com.phetolo.PersonalFinance.model.Account;
 import com.phetolo.PersonalFinance.model.MonthlyBudget;
@@ -28,7 +25,6 @@ import com.phetolo.PersonalFinance.repository.MonthlyBudgetRepository;
 import com.phetolo.PersonalFinance.repository.TransactionRepository;
 import com.phetolo.PersonalFinance.repository.UserRepository;
 
-import jakarta.transaction.InvalidTransactionException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -107,6 +103,11 @@ public class TransactionService {
 			dt.add(TransactionMapper.mapToDTO(ts));
 		}
 		return dt;
+	}
+
+	public TransactionDTO getTransaction(Long id, Long id2) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 	
 	

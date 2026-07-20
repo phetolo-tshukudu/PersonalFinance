@@ -3,7 +3,7 @@ package com.phetolo.PersonalFinance.model;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-import org.springframework.stereotype.Indexed;
+
 
 import com.phetolo.PersonalFinance.enums.AccountType;
 
