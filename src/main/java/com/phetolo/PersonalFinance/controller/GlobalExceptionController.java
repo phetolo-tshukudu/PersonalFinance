@@ -6,8 +6,8 @@ import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestController;
 
 import com.phetolo.PersonalFinance.exception.AccountNotFoundException;
 import com.phetolo.PersonalFinance.exception.BudgetNotFoundException;
@@ -15,7 +15,7 @@ import com.phetolo.PersonalFinance.exception.InvalidTransactionException;
 import com.phetolo.PersonalFinance.exception.TransactionNotFoundException;
 import com.phetolo.PersonalFinance.exception.UserNotFoundException;
 
-@Controller
+@RestController
 public class GlobalExceptionController {
 	
 	@ExceptionHandler(UserNotFoundException.class)
