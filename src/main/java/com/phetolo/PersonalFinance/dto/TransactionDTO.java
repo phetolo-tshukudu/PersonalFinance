@@ -21,8 +21,7 @@ public class TransactionDTO {
 	@Nonnull
 	private BigDecimal amount;
 	@Nonnull
-	private Category category;
+	private Category category; 
 	
-	
-	
+	private Long transferId = null;
 }

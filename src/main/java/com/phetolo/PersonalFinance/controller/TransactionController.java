@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.phetolo.PersonalFinance.dto.TransactionDTO;
 import com.phetolo.PersonalFinance.exception.BudgetExceededException;
+import com.phetolo.PersonalFinance.exception.TransactionNotFoundException;
 import com.phetolo.PersonalFinance.exception.UserNotFoundException;
 import com.phetolo.PersonalFinance.mapper.TransactionMapper;
 import com.phetolo.PersonalFinance.model.User;
@@ -27,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/transaction")
 public class TransactionController {
-	private TransactionService transactionService;
+	private final TransactionService transactionService;
 	
 	@PostMapping
 	public ResponseEntity<TransactionDTO> addTransaction(@AuthenticationPrincipal User user,@RequestBody TransactionDTO dto ) throws AccountNotFoundException, UserNotFoundException, BudgetExceededException{
@@ -38,12 +39,12 @@ public class TransactionController {
 	}
 	
 	@GetMapping("/{id}")
-	public ResponseEntity<TransactionDTO> getTransaction(@AuthenticationPrincipal User user,@PathVariable Long id){
+	public ResponseEntity<TransactionDTO> getTransaction(@AuthenticationPrincipal User user,@PathVariable Long id) throws UserNotFoundException, TransactionNotFoundException{
 		return ResponseEntity.ok(transactionService.getTransaction(user.getId(),id));
 	}
 	
 	@GetMapping
 	public ResponseEntity<List<TransactionDTO>> getAllTransactions(@AuthenticationPrincipal User user) throws UserNotFoundException{
-		return ResponseEntity.ok(transactionService.getTransaction(user.getId()));
+		return ResponseEntity.ok(transactionService.getAllTransaction(user.getId()));
 	}
 }

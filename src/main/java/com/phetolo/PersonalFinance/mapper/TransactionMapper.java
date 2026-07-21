@@ -5,7 +5,7 @@ import com.phetolo.PersonalFinance.model.Transaction;
 
 public class TransactionMapper {
 	public static TransactionDTO mapToDTO(Transaction transaction) {
-		return new TransactionDTO(transaction.getAmount(),transaction.getCategory());
+		return new TransactionDTO(transaction.getAmount(),transaction.getCategory(),null);
 	}
 	
 	public static Transaction mapToEntity(TransactionDTO dto) {

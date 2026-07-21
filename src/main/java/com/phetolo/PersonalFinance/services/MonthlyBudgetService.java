@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import com.phetolo.PersonalFinance.dto.MonthlyBudgetDTO;
 import com.phetolo.PersonalFinance.enums.AccountType;
+import com.phetolo.PersonalFinance.exception.BudgetNotFoundException;
 import com.phetolo.PersonalFinance.exception.UserNotFoundException;
 import com.phetolo.PersonalFinance.mapper.MonthlyBudgetMapper;
 import com.phetolo.PersonalFinance.model.Account;
@@ -26,9 +27,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class MonthlyBudgetService {
 	
-	private UserRepository userRepo;
-	private AccountRepository accountRepo;
-	private MonthlyBudgetRepository budgetRepo;
+	private final UserRepository userRepo;
+	private final AccountRepository accountRepo;
+	private final MonthlyBudgetRepository budgetRepo;
 	
 	@Transactional
 	public MonthlyBudgetDTO createBudget(Long userid, MonthlyBudget budget) throws Exception {
@@ -84,6 +85,15 @@ public class MonthlyBudgetService {
 			throw new Exception("Budget already exists. You can only update the monthly budget once one is created");
 		budgetRepo.deleteById(id);
 		return ;
+	}
+
+	public MonthlyBudgetDTO getBudget(Long userId) throws UserNotFoundException, BudgetNotFoundException {
+		// TODO Auto-generated method stub
+		if(!userRepo.existsById(userId))
+			throw new UserNotFoundException("User "+userId+ " does not exist.");
+		if(!budgetRepo.existsByUser_Id(userId))
+			throw new BudgetNotFoundException("Budget does not exist!");
+		return MonthlyBudgetMapper.mapToDTO(budgetRepo.findByUser_Id(userId));
 	}
 	
 }

@@ -12,6 +12,7 @@ import com.phetolo.PersonalFinance.dto.AccountDTO;
 import com.phetolo.PersonalFinance.enums.AccountType;
 import com.phetolo.PersonalFinance.enums.Category;
 import com.phetolo.PersonalFinance.enums.TransactionType;
+import com.phetolo.PersonalFinance.exception.AccountNotFoundException;
 import com.phetolo.PersonalFinance.exception.UserNotFoundException;
 import com.phetolo.PersonalFinance.mapper.AccountMapper;
 import com.phetolo.PersonalFinance.model.Account;
@@ -30,10 +31,10 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class AccountService {
 	
-	private TransactionRepository transactionRepo;
-	private UserRepository userRepo;
-	private AccountRepository accountRepo;
-	private MonthlyBudgetRepository budgetRepo;
+	private final TransactionRepository transactionRepo;
+	private final UserRepository userRepo;
+	private final AccountRepository accountRepo;
+	private final MonthlyBudgetRepository budgetRepo;
 	
 	@Transactional
 	public AccountDTO createAccount(Long userid, Account account) throws Exception {
@@ -58,7 +59,7 @@ public class AccountService {
 		return AccountMapper.mapToDTO(accountRepo.save(account));
 	}
 	
-	List<AccountDTO> getAllAccounts(Long userid){
+	public List<AccountDTO> getAllAccounts(Long userid){
 		List<Account> acc = accountRepo.findByUser_Id(userid);
 		List<AccountDTO> dto = new ArrayList<>();
 		for(Account a:acc) {
@@ -119,6 +120,15 @@ public class AccountService {
 		
 		}
 		throw new InvalidTransactionException("No "+type+ " account found. Transactions can only be made from a main account.");
+	}
+
+	public AccountDTO getAccount(Long userId, Long id) throws UserNotFoundException, AccountNotFoundException {
+		// TODO Auto-generated method stub
+		if(!userRepo.existsById(userId))
+			throw new UserNotFoundException("user "+ userId+" not found!");
+		if(!accountRepo.existsById(id))
+			throw new AccountNotFoundException("Account does not exist!");
+		return AccountMapper.mapToDTO(accountRepo.findById(id).get());
 	}
 	
 	

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.phetolo.PersonalFinance.exception.AccessDeniedException;
 import com.phetolo.PersonalFinance.exception.AccountNotFoundException;
 import com.phetolo.PersonalFinance.exception.BudgetNotFoundException;
 import com.phetolo.PersonalFinance.exception.InvalidTransactionException;
@@ -59,6 +60,15 @@ public class GlobalExceptionController {
 		Map<String,Object> err = new HashMap<String, Object>();
 		err.put("timestamp", LocalDateTime.now());
 		err.put("status", HttpStatus.NOT_FOUND);
+		err.put("message", ex.getMessage());
+		return ResponseEntity.ok(err);
+	}
+	
+	@ExceptionHandler(AccessDeniedException.class)
+	public ResponseEntity<Map<String,Object>> handleAccessDeniedException(AccessDeniedException ex){
+		Map<String,Object> err = new HashMap<String, Object>();
+		err.put("timestamp", LocalDateTime.now());
+		err.put("status", HttpStatus.FORBIDDEN);
 		err.put("message", ex.getMessage());
 		return ResponseEntity.ok(err);
 	}

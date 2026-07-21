@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.phetolo.PersonalFinance.dto.TransactionDTO;
 import com.phetolo.PersonalFinance.enums.TransactionType;
 import com.phetolo.PersonalFinance.exception.BudgetExceededException;
+import com.phetolo.PersonalFinance.exception.TransactionNotFoundException;
 import com.phetolo.PersonalFinance.exception.UserNotFoundException;
 import com.phetolo.PersonalFinance.mapper.TransactionMapper;
 import com.phetolo.PersonalFinance.model.Account;
@@ -28,10 +29,9 @@ import com.phetolo.PersonalFinance.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
+
 @AllArgsConstructor
 @Getter
 @Setter
@@ -39,10 +39,10 @@ import lombok.Setter;
 @Service
 
 public class TransactionService {
-	private TransactionRepository transactionRepo;
-	private UserRepository userRepo;
-	private AccountRepository accountRepo;
-	private MonthlyBudgetRepository budgetRepo;
+	private final TransactionRepository transactionRepo;
+	private final UserRepository userRepo;
+	private final AccountRepository accountRepo;
+	private final MonthlyBudgetRepository budgetRepo;
 	
 	@Transactional
 	public TransactionDTO addTransaction(Long userid,Transaction transaction) throws UserNotFoundException, AccountNotFoundException, BudgetExceededException {
@@ -94,7 +94,7 @@ public class TransactionService {
 		return transactionRepo.getExpenseSum(userid);
 	}
 	
-	public List<TransactionDTO> getTransaction(Long userid) throws UserNotFoundException {
+	public List<TransactionDTO> getAllTransaction(Long userid) throws UserNotFoundException {
 		if(!userRepo.existsById(userid))
 			throw new UserNotFoundException("user "+ userid+" not found!");
 		List<Transaction> t = transactionRepo.findByUser_Id(userid);
@@ -105,9 +105,14 @@ public class TransactionService {
 		return dt;
 	}
 
-	public TransactionDTO getTransaction(Long id, Long id2) {
+	public TransactionDTO getTransaction(Long userid,Long id) throws UserNotFoundException, TransactionNotFoundException {
 		// TODO Auto-generated method stub
-		return null;
+		if(!userRepo.existsById(userid))
+			throw new UserNotFoundException("user "+ userid+" not found!");
+		if(!transactionRepo.existsById(id))
+			throw new TransactionNotFoundException("Transaction does not exist!");
+		
+		return TransactionMapper.mapToDTO(transactionRepo.findById(id).get());
 	}
 	
 	

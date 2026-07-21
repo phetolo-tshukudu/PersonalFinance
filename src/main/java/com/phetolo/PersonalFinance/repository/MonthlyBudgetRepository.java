@@ -15,4 +15,5 @@ public interface MonthlyBudgetRepository extends JpaRepository<MonthlyBudget, Lo
 	
 	@Query("UPDATE MonthlyBudget b SET b.amount =:amount WHERE b.user.id=:userid")
 	MonthlyBudget updateBudget(Long userid,BigDecimal amount);
+	boolean existsByUser_Id(Long userId);
 }
