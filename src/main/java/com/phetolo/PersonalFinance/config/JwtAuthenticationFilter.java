@@ -24,13 +24,13 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	private final JwtService jwtService;
-	private UserDetailsService userDetailsService;
+	private final UserDetailsService userDetailsService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		final String authHeader = request.getHeader("Authentication");
+		final String authHeader = request.getHeader("Authorization");
 		final String jwt;
 		final String username;
 		
@@ -48,11 +48,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 		username = jwtService.extractUsername(jwt);
 		if(username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 			UserDetails userdetails = this.userDetailsService.loadUserByUsername(username);
-			if(jwtService.isTokenValid(username, userdetails)) {
+			if(jwtService.isTokenValid(jwt, userdetails)) {
 				//update context
 				UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-						username,null
-						, userdetails.getAuthorities());
+						userdetails, null, userdetails.getAuthorities());
 				authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 				SecurityContextHolder.getContext().setAuthentication(authToken);
 				}
