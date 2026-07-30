@@ -25,6 +25,7 @@ import com.phetolo.PersonalFinance.dto.AccountDTO;
 import com.phetolo.PersonalFinance.enums.AccountType;
 import com.phetolo.PersonalFinance.enums.Category;
 import com.phetolo.PersonalFinance.enums.TransactionType;
+import com.phetolo.PersonalFinance.exception.AccountNotFoundException;
 import com.phetolo.PersonalFinance.exception.UserNotFoundException;
 import com.phetolo.PersonalFinance.model.Account;
 import com.phetolo.PersonalFinance.model.MonthlyBudget;
@@ -228,5 +229,34 @@ public class AccountServiceTest {
         verifyNoInteractions(budgetRepo);
         verifyNoInteractions(accountRepo);
         verifyNoInteractions(transactionRepo);
+    }
+    
+    @Test
+    void getAccountReturnAccountWhenUserExist() throws UserNotFoundException, AccountNotFoundException {
+    	Long userId = 1L;
+    	Long accountId = 2L;
+    	
+    	AccountDTO dto = new AccountDTO();
+    	dto.setAccountType(AccountType.MAIN);
+    	dto.setBalance(new BigDecimal(1000));
+    	Account account = new Account();
+    	account.setId(accountId);
+    	account.setType(AccountType.MAIN);
+    	
+    	
+    	when(accountRepo.existsById(accountId)).thenReturn(true);
+    	when(userRepo.existsById(userId)).thenReturn(true);		when(accountRepo.findById(accountId)).thenReturn(Optional.of(account));
+		
+		//action
+		AccountDTO result = accountService.getAccount(userId, accountId);
+		
+		assertNotNull(result);
+		assertEquals(dto.getAccountType(), result.getAccountType());
+		assertEquals(account.getId(), accountId);
+		
+		verify(accountRepo).existsById(accountId);
+		verify(userRepo).existsById(userId);
+		verify(accountRepo).findById(accountId);
+		
     }
 }
