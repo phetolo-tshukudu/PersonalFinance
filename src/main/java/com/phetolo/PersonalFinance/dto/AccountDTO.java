@@ -19,5 +19,6 @@ import lombok.Setter;
 public class AccountDTO {
 	@Nonnull
 	private AccountType accountType;
+	
 	private BigDecimal balance;
 }

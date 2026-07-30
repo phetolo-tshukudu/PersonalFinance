@@ -119,7 +119,7 @@ public class AccountService {
 			}
 		
 		}
-		throw new InvalidTransactionException("No "+type+ " account found. Transactions can only be made from a main account.");
+		return null;
 	}
 
 	public AccountDTO getAccount(Long userId, Long id) throws UserNotFoundException, AccountNotFoundException {
