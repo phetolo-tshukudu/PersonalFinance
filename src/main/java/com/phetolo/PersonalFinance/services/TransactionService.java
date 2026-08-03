@@ -12,6 +12,7 @@ import javax.security.auth.login.AccountNotFoundException;
 import org.springframework.stereotype.Service;
 
 import com.phetolo.PersonalFinance.dto.TransactionDTO;
+import com.phetolo.PersonalFinance.enums.Category;
 import com.phetolo.PersonalFinance.enums.TransactionType;
 import com.phetolo.PersonalFinance.exception.BudgetExceededException;
 import com.phetolo.PersonalFinance.exception.TransactionNotFoundException;
@@ -69,6 +70,7 @@ public class TransactionService {
 		}
 		
 		//classify category from helper
+		transaction.setCategory(classifyCategory(transaction.getCategory()));
 		
 		transaction.setUser(user);
 		transaction.setCreatedAt(LocalDateTime.now());
@@ -82,6 +84,25 @@ public class TransactionService {
 		return TransactionMapper.mapToDTO(transaction);
 	}
 	
+	private Category classifyCategory(Category category) {
+		// TODO Auto-generated method stub
+		switch(category) {
+			case FOOD:
+				return Category.FOOD;
+			case ENTERTAINMENT:
+				return Category.ENTERTAINMENT;
+			case TRANSPORT:
+				return Category.TRANSPORT;
+			case UTILITIES:
+				return Category.UTILITIES;
+			case TRANSFER:
+				return Category.TRANSFER;
+			case SALARY:
+				return Category.SALARY;
+		}
+		return Category.OTHER;
+	}
+
 	public BigDecimal getTotalIncome(Long userid) throws UserNotFoundException {
 		if(!userRepo.existsById(userid))
 			throw new UserNotFoundException("user "+ userid+" not found!");
