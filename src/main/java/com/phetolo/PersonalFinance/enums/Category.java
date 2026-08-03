@@ -6,6 +6,6 @@ public enum Category {
 	TRANSPORT,
 	SALARY,
 	UTILITIES,
-	TRANSFER
+	TRANSFER, OTHER
 	
 }
